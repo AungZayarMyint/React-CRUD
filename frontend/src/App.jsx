@@ -10,6 +10,9 @@ import Details, {
 } from "./pages/Details";
 import Edit from "./pages/Edit";
 import Error from "./pages/Error";
+import Auth, { action as AuthAction } from "./pages/Auth";
+import { loader as logoutLoader } from "./pages/Logout";
+import { checkTokenLoader, tokenLoader } from "./util/auth";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -17,6 +20,8 @@ const App = () => {
       path: "/",
       element: <Main />,
       errorElement: <Error />,
+      id: "root",
+      loader: tokenLoader,
       children: [
         {
           index: true,
@@ -27,6 +32,16 @@ const App = () => {
           path: "/create-post",
           element: <Create />,
           action: postCreateAction,
+          loader: checkTokenLoader,
+        },
+        {
+          path: "/auth",
+          element: <Auth />,
+          action: AuthAction,
+        },
+        {
+          path: "/logout",
+          loader: logoutLoader,
         },
         {
           path: ":id",
@@ -42,6 +57,7 @@ const App = () => {
               path: "edit-post",
               element: <Edit />,
               action: postUpdateAction,
+              loader: checkTokenLoader,
             },
           ],
         },
